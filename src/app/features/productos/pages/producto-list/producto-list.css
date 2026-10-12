@@ -1,0 +1,9 @@
+.ayuda { color: #64748b; margin: -8px 0 0; }
+.filtros { display: grid; gap: 8px; margin-bottom: 16px; max-width: 700px; }
+.filtros label { font-size: 14px; font-weight: 600; }
+.tabla-contenedor { overflow-x: auto; }
+.monto { text-align: right; white-space: nowrap; }
+.stock { font-weight: 700; }
+.stock-bajo { color: #b42318; }
+.vacio { text-align: center; color: #64748b; padding: 24px; }
+@media (max-width: 620px) { .page-header { align-items: flex-start; flex-direction: column; gap: 12px; } }

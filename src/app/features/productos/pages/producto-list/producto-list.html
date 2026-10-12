@@ -1,0 +1,7 @@
+<section class="page">
+  <header class="page-header"><div><h2>Productos y stock</h2><p class="ayuda">Consulte el stock actualizado después de registrar una venta.</p></div><button type="button" class="btn" (click)="cargar()" [disabled]="cargando()">↻ Actualizar</button></header>
+  @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+  <div class="card filtros"><label for="buscar-producto">Buscar por producto o categoría</label><input id="buscar-producto" class="input" type="search" placeholder="Ej. Paracetamol, analgésicos…" [value]="busqueda()" (input)="busqueda.set($any($event.target).value)" /></div>
+  @if (cargando()) { <div class="card">Cargando catálogo…</div> }
+  @else { <div class="card tabla-contenedor"><table class="tabla"><thead><tr><th>Producto</th><th>Categoría</th><th class="monto">Precio</th><th class="monto">Stock disponible</th><th>Estado</th></tr></thead><tbody>@for (p of filtrados(); track p.id) { <tr><td>{{ p.nombre }}</td><td>{{ p.categoriaNombre || p.categoria?.nombre || 'Sin categoría' }}</td><td class="monto">{{ p.precio | currency:'PEN':'S/ ' }}</td><td class="monto stock" [class.stock-bajo]="p.stock <= 5">{{ p.stock }}</td><td><span class="badge" [class.inactivo]="!p.estado">{{ p.estado ? 'Activo' : 'Inactivo' }}</span></td></tr> } @empty { <tr><td colspan="5" class="vacio">No hay productos que coincidan con la búsqueda.</td></tr> }</tbody></table></div> }
+</section>
