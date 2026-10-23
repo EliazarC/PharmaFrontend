@@ -5,10 +5,12 @@ import { Producto } from '../../models/producto.model';
 import { ProductoService } from '../../services/producto-service';
 import { mensajeError } from '../../../../core/utils/http-error';
 import { coincide } from '../../../../core/utils/texto';
+import { RouterLink } from '@angular/router';
+import { SiPermiso } from '../../../../shared/directives/si-permiso';
 
 @Component({
   selector: 'app-producto-list',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink, SiPermiso],
   templateUrl: './producto-list.html',
   styleUrl: './producto-list.css',
 })
