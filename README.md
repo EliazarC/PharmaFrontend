@@ -85,3 +85,37 @@ Abrir `http://localhost:4200`.
 - `/productos`: consulta de productos y stock actualizado.
 
 El request de registro envía únicamente `clienteId` y la lista de `productoId`/`cantidad`; el servidor calcula precios, subtotales y total. El servicio de ventas admite respuesta paginada (`contenido` o `content`) y listas simples para mantener compatibilidad con distintas versiones de PharmaBackend.
+
+
+## Seguridad frontend (Sesión 11)
+
+Se integró el flujo de autenticación de la guía práctica de la Sesión 11:
+
+- Login Angular con validación de campos y mensaje genérico para credenciales incorrectas.
+- `AuthService` como fuente de sesión mediante signals y `sessionStorage` (`pharmasoft.sesion`).
+- Cálculo de expiración, recuperación después de F5 y cierre automático al vencer.
+- Interceptores HTTP: encabezado Bearer solo para solicitudes a la API y tratamiento de `401` sin interceptar el error del propio login.
+- Guards de autenticación, invitado y permisos; página de acceso denegado para `403`/permisos insuficientes.
+- Menú, acciones de categorías y formulario de productos condicionados por permisos.
+- Header con usuario, roles, hora de expiración y botón de cierre de sesión.
+
+### Ejecutar en Visual Studio Code
+
+Requisitos: Node.js compatible con Angular 22 y el backend PharmaBackend en ejecución.
+
+```powershell
+npm ci
+npm start
+```
+
+Abrir `http://localhost:4200`. La URL del backend se configura en `src/environments/environment.ts` y `src/environments/environment.development.ts`.
+
+### Usuarios de prueba de la guía
+
+Usar los usuarios y contraseñas definidos en el PDF de la Sesión 11. No se guardan contraseñas en el navegador; la sesión se guarda en `sessionStorage`.
+
+### Verificación pendiente en el entorno local
+
+Las respuestas de login y los permisos deben coincidir con el contrato real de PharmaBackend (`POST /api/v1/auth/login`, con `token`, `expiraEnSegundos`, `username`, `nombreCompleto`, `roles` y `permisos`). Si el backend usa nombres distintos, adaptar el modelo/mapeo en `src/app/core/auth/auth.model.ts` y `auth-service.ts`.
+
+La guía pide registrar capturas de los 16 casos y versionar los cambios en la rama `feature/seguridad-frontend-<apellido>` con al menos cuatro commits y un Pull Request hacia `develop`. El ZIP no crea commits ni publica cambios en GitHub automáticamente.

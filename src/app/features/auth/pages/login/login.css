@@ -1,0 +1,7 @@
+.fondo-login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#0f2e5c,#1f5aa6);box-sizing:border-box}
+.tarjeta-login{width:100%;max-width:410px;background:#fff;border-radius:18px;padding:32px;box-shadow:0 22px 60px #071b3b55;box-sizing:border-box}
+.marca-login{color:#1555a2;font-size:26px;font-weight:800;letter-spacing:-.5px}.subtitulo{margin:5px 0 26px;color:#667085;font-size:14px}
+h1{margin:0 0 20px;font-size:25px;color:#102a4c}form{display:flex;flex-direction:column;gap:9px}label{font-size:14px;font-weight:600;color:#25364d}
+.campo-login{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;outline-color:#2463ad}
+.mostrar-clave{display:flex;align-items:center;gap:8px;font-weight:400;margin:4px 0 8px}.boton-login{border:0;border-radius:8px;padding:12px;background:#1555a2;color:white;font-size:15px;font-weight:700;cursor:pointer}.boton-login:disabled{opacity:.65;cursor:wait}
+.error-login{color:#b42318}.alerta-login,.aviso-login{padding:11px 13px;border-radius:8px;margin-bottom:14px;font-size:14px}.alerta-login{background:#fef3f2;color:#b42318}.aviso-login{background:#fff6dc;color:#7a5200}

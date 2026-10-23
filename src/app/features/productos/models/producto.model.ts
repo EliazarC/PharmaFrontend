@@ -14,3 +14,13 @@ export interface Producto {
   categoriaNombre?: string;
   categoria?: ProductoCategoria | null;
 }
+
+
+export interface ProductoRequest {
+  nombre: string;
+  descripcion: string | null;
+  precio: number;
+  stock: number;
+  estado: boolean;
+  categoriaId: number;
+}
