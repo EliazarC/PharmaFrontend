@@ -31,3 +31,11 @@ export interface Sesion {
   roles: string[];
   permisos: Permiso[];
 }
+
+/** Respuesta de GET /auth/me (perfil del usuario autenticado según el servidor). */
+export interface PerfilResponse {
+  username: string;
+  nombreCompleto: string;
+  roles: string[];
+  permisos: Permiso[];
+}

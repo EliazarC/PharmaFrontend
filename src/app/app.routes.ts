@@ -47,6 +47,12 @@ export const routes: Routes = [
         loadChildren: () => import('./features/reportes/reportes.routes').then(m => m.REPORTES_ROUTES),
       },
       {
+        // Cualquier usuario autenticado puede ver su perfil: sin permisoGuard.
+        path: 'mi-cuenta',
+        title: 'Mi cuenta',
+        loadComponent: () => import('./features/auth/pages/mi-cuenta/mi-cuenta').then(m => m.MiCuenta),
+      },
+      {
         path: 'acceso-denegado',
         title: 'Acceso denegado',
         loadComponent: () => import('./shared/pages/acceso-denegado/acceso-denegado').then(m => m.AccesoDenegado),

@@ -1,11 +1,14 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { LoginRequest, LoginResponse, Permiso, Sesion } from './auth.model';
+import { LoginRequest, LoginResponse, PerfilResponse, Permiso, Sesion } from './auth.model';
 
 const CLAVE_SESION = 'pharmasoft.sesion';
+
+/** Segundos restantes a partir de los cuales se avisa que la sesión está por vencer. */
+export const UMBRAL_AVISO_SEGUNDOS = 120;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,14 +16,28 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly url = `${environment.apiUrl}/auth`;
   private readonly sesionActual = signal<Sesion | null>(this.leerSesionGuardada());
-  private temporizador?: ReturnType<typeof setTimeout>;
+  private readonly restantes = signal(0);
+  private readonly avisoOculto = signal(false);
+  /** Único temporizador de la sesión: actualiza la cuenta regresiva y cierra al vencer. */
+  private intervalo?: ReturnType<typeof setInterval>;
 
   readonly sesion = this.sesionActual.asReadonly();
-  readonly autenticado = computed(() => this.token() !== null);
+  // No debe llamar a token(): éste puede cerrar la sesión y un computed no puede escribir señales.
+  readonly autenticado = computed(() => this.sesionActual() !== null);
+
+  /** Segundos que quedan de la sesión, recalculados desde `expiraEn` (no por resta incremental). */
+  readonly segundosRestantes = this.restantes.asReadonly();
+  /** true si hay sesión y faltan 120 s o menos para que venza. */
+  readonly porVencer = computed(
+    () => this.sesionActual() !== null && this.restantes() <= UMBRAL_AVISO_SEGUNDOS,
+  );
+  /** true si el usuario ocultó el aviso en la sesión actual. Se reinicia al comenzar otra sesión. */
+  readonly avisoExpiracionOculto = this.avisoOculto.asReadonly();
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => this.detenerCuentaRegresiva());
     const sesion = this.sesionActual();
-    if (sesion) this.programarExpiracion(sesion);
+    if (sesion) this.iniciarCuentaRegresiva();
   }
 
   login(credenciales: LoginRequest): Observable<Sesion> {
@@ -43,11 +60,17 @@ export class AuthService {
     );
   }
 
+  /** Perfil del usuario según el servidor (GET /auth/me). El token lo agrega authInterceptor. */
+  obtenerPerfil(): Observable<PerfilResponse> {
+    return this.http.get<PerfilResponse>(`${this.url}/me`);
+  }
+
   cerrarSesion(motivo?: 'expirada', volverA?: string): void {
-    if (this.temporizador) clearTimeout(this.temporizador);
-    this.temporizador = undefined;
+    this.detenerCuentaRegresiva();
     try { sessionStorage.removeItem(CLAVE_SESION); } catch { /* almacenamiento no disponible */ }
     this.sesionActual.set(null);
+    this.restantes.set(0);
+    this.avisoOculto.set(false);
 
     const queryParams: Record<string, string> = {};
     if (motivo === 'expirada') queryParams['expirada'] = '1';
@@ -55,6 +78,11 @@ export class AuthService {
       queryParams['returnUrl'] = volverA;
     }
     void this.router.navigate(['/login'], { queryParams });
+  }
+
+  /** Oculta el aviso de expiración solo durante la sesión actual. No renueva ni cierra la sesión. */
+  ocultarAvisoExpiracion(): void {
+    this.avisoOculto.set(true);
   }
 
   token(): string | null {
@@ -77,17 +105,34 @@ export class AuthService {
     } catch {
       // La sesión sigue activa en memoria, aunque no podrá recuperarse tras F5.
     }
+    this.avisoOculto.set(false);
     this.sesionActual.set(sesion);
-    this.programarExpiracion(sesion);
+    this.iniciarCuentaRegresiva();
   }
 
-  private programarExpiracion(sesion: Sesion): void {
-    if (this.temporizador) clearTimeout(this.temporizador);
-    const restante = sesion.expiraEn - Date.now();
-    this.temporizador = setTimeout(
-      () => this.cerrarSesion('expirada', this.router.url),
-      Math.max(restante, 0),
-    );
+  /** Arranca (o reinicia) el único intervalo de 1 s; nunca quedan dos activos. */
+  private iniciarCuentaRegresiva(): void {
+    this.detenerCuentaRegresiva();
+    this.actualizarCuentaRegresiva();
+    if (this.sesionActual()) {
+      this.intervalo = setInterval(() => this.actualizarCuentaRegresiva(), 1000);
+    }
+  }
+
+  private detenerCuentaRegresiva(): void {
+    if (this.intervalo !== undefined) clearInterval(this.intervalo);
+    this.intervalo = undefined;
+  }
+
+  private actualizarCuentaRegresiva(): void {
+    const sesion = this.sesionActual();
+    if (!sesion) {
+      this.restantes.set(0);
+      return;
+    }
+    const msRestantes = sesion.expiraEn - Date.now();
+    this.restantes.set(Math.max(0, Math.floor(msRestantes / 1000)));
+    if (msRestantes <= 0) this.cerrarSesion('expirada', this.router.url);
   }
 
   private leerSesionGuardada(): Sesion | null {

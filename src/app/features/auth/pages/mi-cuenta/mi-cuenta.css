@@ -1,0 +1,19 @@
+.cuenta { max-width: 860px; }
+.estado { color: #475569; }
+.alerta p, .aviso p { margin: 0 0 8px; }
+.aviso { padding: 12px 16px; margin-bottom: 16px; border-radius: 8px; background: #fff6dc; color: #7a5200; }
+.datos { display: grid; gap: 12px; margin: 0 0 16px; }
+.datos dt { font-size: 12px; text-transform: uppercase; color: #6b7280; }
+.datos dd { margin: 2px 0 0; font-weight: 600; }
+.etiqueta { display: inline-block; margin: 0 6px 4px 0; padding: 2px 10px; border-radius: 999px; background: #e0e9f8; color: #0f2e5c; font-size: 13px; font-weight: 600; }
+.vacio { font-weight: 400; color: #6b7280; }
+.modulos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.modulo { padding: 12px; border: 1px solid #e3e8f0; border-radius: 10px; }
+.modulo h4 { margin: 0 0 8px; color: #0f2e5c; }
+ul { list-style: none; margin: 0; padding: 0; }
+li { padding: 3px 0; color: #6b7280; }
+li.concedido { color: #166534; }
+.marca { display: inline-block; width: 1.2em; font-weight: 700; }
+li:not(.concedido) .marca { color: #b42318; }
+code { font-size: 12px; color: #475569; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

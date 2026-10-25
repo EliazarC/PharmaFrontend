@@ -13,6 +13,8 @@
 .usuario { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; opacity: 1; }
 .nombre { font-weight: 600; font-size: 14px; }
 .detalle { font-size: 12px; color: #cadcfc; }
+.enlace-cuenta { color: #fff; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.enlace-cuenta:hover, .enlace-cuenta.activo { color: #f2a900; }
 .btn-salir { padding: 6px 12px; border: 1px solid #cadcfc; border-radius: 8px; background: none; color: #fff; font: inherit; font-size: 14px; cursor: pointer; }
 .btn-salir:hover { background: rgb(255 255 255 / 12%); }
 @media (max-width: 760px) { .menubar { display: none; } .detalle { display: none; } .header { gap: 10px; padding: 0 12px; } .btn-salir { padding: 5px 8px; } }

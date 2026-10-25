@@ -1,0 +1,9 @@
+@if (visible()) {
+  <div class="aviso" role="status">
+    <!-- La región role="status" anuncia una sola vez este texto; el contador visible no se vuelve a leer cada segundo. -->
+    <span class="sr-only">Su sesión vencerá en menos de dos minutos.</span>
+    <span class="mensaje" aria-hidden="true">⚠ Su sesión vence en <strong class="tiempo">{{ tiempo() }}</strong></span>
+    <button type="button" class="btn-cerrar" (click)="cerrarAhora()">Cerrar sesión ahora</button>
+    <button type="button" class="btn-x" aria-label="Ocultar aviso de vencimiento" (click)="ocultar()">×</button>
+  </div>
+}

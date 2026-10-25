@@ -48,7 +48,8 @@ export class Login {
 
   private destino(): string {
     const url = this.returnUrl();
-    return url && url.startsWith('/') && !url.startsWith('//') && !url.startsWith('/login')
+    return url && url.startsWith('/') && !url.startsWith('//') && !url.includes('\\') &&
+      !url.startsWith('/login')
       ? url
       : '/inicio';
   }

@@ -1,27 +1,16 @@
-﻿import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../core/auth/auth-service';
 
+/** Página de inicio mínima (el ZIP recibido no incluía este componente, que app.routes.ts importa). */
 @Component({
   selector: 'app-inicio',
-  standalone: true,
   template: `
-    <section class="inicio">
-      <h1>Bienvenido a PharmaSoft</h1>
-      <p>Panel principal del sistema de gestión farmacéutica.</p>
-      <div class="tarjeta">
-        <h2>Inicio</h2>
-        <p>Utiliza el menú para acceder a categorías, productos,
-        ventas y reportes según los permisos de tu usuario.</p>
-      </div>
+    <section class="card">
+      <h2>Inicio</h2>
+      <p>Bienvenido{{ auth.sesion() ? ', ' + (auth.sesion()?.nombreCompleto || auth.sesion()?.username) : '' }}.</p>
     </section>
   `,
-  styles: [`
-    .inicio { padding: 1.5rem; }
-    .tarjeta {
-      margin-top: 1rem;
-      padding: 1.25rem;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-    }
-  `]
 })
-export class Inicio {}
+export class Inicio {
+  protected readonly auth = inject(AuthService);
+}

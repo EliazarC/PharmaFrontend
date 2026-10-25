@@ -1,0 +1,66 @@
+<section class="card cuenta" aria-labelledby="titulo-cuenta">
+  <h2 id="titulo-cuenta">Mi cuenta</h2>
+
+  @if (cargando()) {
+    <p class="estado" role="status">Cargando su perfil…</p>
+  } @else if (error()) {
+    <div class="alerta" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" class="btn" (click)="cargar()">Reintentar</button>
+    </div>
+  } @else if (perfil(); as p) {
+    @if (permisosCambiaron()) {
+      <div class="aviso" role="status">
+        <p>Sus permisos cambiaron. Cierre sesión y vuelva a ingresar para actualizarlos.</p>
+        <button type="button" class="btn" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    }
+
+    <dl class="datos">
+      <div><dt>Nombre completo</dt><dd>{{ p.nombreCompleto }}</dd></div>
+      <div><dt>Usuario</dt><dd>{{ p.username }}</dd></div>
+      <div>
+        <dt>Roles</dt>
+        <dd>
+          @for (rol of p.roles; track rol) {
+            <span class="etiqueta">{{ rol }}</span>
+          } @empty {
+            <span class="vacio">Sin roles asignados</span>
+          }
+        </dd>
+      </div>
+    </dl>
+
+    <h3>Permisos por módulo</h3>
+    <div class="modulos">
+      @for (m of modulos(); track m.modulo) {
+        <section class="modulo" [attr.aria-label]="'Permisos de ' + m.modulo">
+          <h4>{{ m.modulo }}</h4>
+          <ul>
+            @for (permiso of m.permisos; track permiso.codigo) {
+              <li [class.concedido]="permiso.concedido">
+                @if (permiso.concedido) {
+                  <span class="marca" aria-hidden="true">✔</span>
+                  <span class="sr-only">Concedido:</span>
+                } @else {
+                  <span class="marca" aria-hidden="true">✘</span>
+                  <span class="sr-only">No concedido:</span>
+                }
+                {{ permiso.accion }} <code>{{ permiso.codigo }}</code>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+
+    @if (otrosPermisos().length > 0) {
+      <h4>Otros permisos del servidor</h4>
+      <ul class="otros">
+        @for (codigo of otrosPermisos(); track codigo) {
+          <li><span class="marca" aria-hidden="true">✔</span><span class="sr-only">Concedido:</span> <code>{{ codigo }}</code></li>
+        }
+      </ul>
+    }
+  }
+</section>
