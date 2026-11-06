@@ -20,9 +20,10 @@ npm run build
 
 Registra en la tabla de evidencias `Initial total` (Raw y Estimated transfer size) y las filas de `Lazy chunk files`.
 
-Después:
+Después, si Redis se levantó previamente con el comando del Backend, reemplaza ese contenedor independiente por el servicio Redis del Compose:
 
 ```powershell
+docker rm -f pharma-redis
 cd deploy
 docker compose up -d
 docker compose ps
