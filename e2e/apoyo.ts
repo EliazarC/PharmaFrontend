@@ -17,6 +17,8 @@ export const USUARIOS = {
   almacen: { usuario: env.E2E_ALMACEN_USER || 'almacen', clave: () => obligatorio('E2E_ALMACEN_PASSWORD') },
 } as const;
 
+export const API_BASE_URL = env.E2E_API_URL || 'http://localhost:8080/api/v1';
+
 export const BUSQUEDA_CLIENTE_E2E = env.E2E_CLIENTE_BUSQUEDA || 'Cliente E2E';
 export const BUSQUEDA_PRODUCTO_E2E = env.E2E_PRODUCTO_BUSQUEDA || 'A - Paracetamol E2E';
 
