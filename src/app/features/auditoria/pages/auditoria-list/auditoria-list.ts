@@ -70,7 +70,15 @@ export class AuditoriaList implements OnInit {
   private navegar(queryParams: Record<string, string | number | null>): void {
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: {
+        pagina: this.pagina(),
+        tamanio: this.tamanio(),
+        usuario: this.usuario() || null,
+        accion: this.accion() || null,
+        desde: this.desde() || null,
+        hasta: this.hasta() || null,
+        ...queryParams,
+      },
       queryParamsHandling: 'merge',
     });
   }
