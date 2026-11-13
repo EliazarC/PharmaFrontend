@@ -116,7 +116,17 @@ export class VentaList implements OnInit {
   private navegar(queryParams: Record<string, string | number | null>): void {
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: {
+        pagina: this.pagina(),
+        tamanio: this.tamanio(),
+        orden: this.orden(),
+        dir: this.dir(),
+        clienteId: this.filtros.controls.clienteId.value,
+        estado: this.filtros.controls.estado.value,
+        desde: this.filtros.controls.desde.value,
+        hasta: this.filtros.controls.hasta.value,
+        ...queryParams,
+      },
       queryParamsHandling: 'merge',
     });
   }
