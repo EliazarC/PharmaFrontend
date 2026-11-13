@@ -1,0 +1,27 @@
+name: Compilación Frontend y descubrimiento E2E
+
+on:
+  push:
+    branches:
+      - feature/integracion-estabilizacion-cauna
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Compilar Angular
+        run: npm run build
+      - name: Verificar descubrimiento de pruebas Playwright
+        run: npx playwright test --list
