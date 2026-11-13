@@ -25,5 +25,5 @@ test('flujo principal: vendedor registra una venta y el stock baja', async ({ pa
   await page.goto('/productos?pagina=0&tamanio=20&orden=nombre&dir=asc');
   const filaProducto = page.getByTestId('tabla-productos')
     .locator('tr', { hasText: 'Paracetamol' }).first();
-  await expect(filaProducto).toContainText(String(stockAntes - 2));
+  await expect(filaProducto.locator('td').nth(3)).toHaveText(String(stockAntes - 2));
 });
