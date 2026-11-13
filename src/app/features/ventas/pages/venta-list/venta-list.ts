@@ -107,6 +107,11 @@ export class VentaList implements OnInit {
     this.navegar({ pagina: 0, clienteId: null, estado: null, desde: null, hasta: null });
   }
 
+  ordenarPor(campo: string): void {
+    const direccion = this.orden() === campo && this.dir() === 'asc' ? 'desc' : 'asc';
+    this.navegar({ orden: campo, dir: direccion, pagina: 0 });
+  }
+
   irA(pagina: number): void { this.navegar({ pagina }); }
 
   cambiarTamanio(tamanio: number): void {
