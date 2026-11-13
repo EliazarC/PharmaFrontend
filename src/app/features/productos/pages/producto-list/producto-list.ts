@@ -79,7 +79,13 @@ export class ProductoList implements OnInit {
   private navegar(queryParams: Record<string, string | number>): void {
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: {
+        pagina: this.pagina(),
+        tamanio: this.tamanio(),
+        orden: this.orden(),
+        dir: this.dir(),
+        ...queryParams,
+      },
       queryParamsHandling: 'merge',
     });
   }
