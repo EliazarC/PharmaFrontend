@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { iniciarSesion } from './apoyo';
+import { iniciarSesion, API_BASE_URL } from './apoyo';
 
 test('productos se paginan en el servidor y la página permanece en la URL tras F5', async ({ page }) => {
   await iniciarSesion(page, 'admin', '/productos');
@@ -19,4 +19,14 @@ test('productos se paginan en el servidor y la página permanece en la URL tras 
   await expect(page.getByTestId('pagina-actual')).toHaveText(/Página 2 de/);
   await page.reload();
   await expect(page.getByTestId('pagina-actual')).toHaveText(/Página 2 de/);
+
+  const token = await page.evaluate(() => {
+    const sesion = JSON.parse(sessionStorage.getItem('pharmasoft.sesion') ?? 'null');
+    return sesion?.token as string | undefined;
+  });
+  expect(token).toBeTruthy();
+  const limite = await page.request.get(`${API_BASE_URL}/productos?pagina=0&tamanio=500`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  expect(limite.status()).toBe(409);
 });
