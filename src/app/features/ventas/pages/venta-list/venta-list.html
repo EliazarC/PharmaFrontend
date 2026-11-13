@@ -36,7 +36,7 @@
   } @else if (resultado(); as r) {
     <div class="tabla-contenedor">
       <table class="tabla" data-testid="tabla-ventas">
-        <thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th>Ítems</th><th class="monto">Total</th><th>Estado</th><th class="no-imprimir">Acciones</th></tr></thead>
+        <thead><tr><th>N.º</th><th><button type="button" class="orden" (click)="ordenarPor('fecha')">Fecha ↕</button></th><th>Cliente</th><th>Ítems</th><th class="monto"><button type="button" class="orden" (click)="ordenarPor('total')">Total ↕</button></th><th><button type="button" class="orden" (click)="ordenarPor('estado')">Estado ↕</button></th><th class="no-imprimir">Acciones</th></tr></thead>
         <tbody>
           @for (v of r.contenido; track v.id) {
             <tr>
