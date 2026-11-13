@@ -13,6 +13,8 @@ export interface Producto {
   categoriaId?: number;
   categoriaNombre?: string;
   categoria?: ProductoCategoria | null;
+  creadoPor?: string | null;
+  modificadoPor?: string | null;
 }
 
 

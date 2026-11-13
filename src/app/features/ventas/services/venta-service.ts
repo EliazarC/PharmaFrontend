@@ -18,13 +18,18 @@ export class VentaService {
     return this.http.get<Venta>(`${this.url}/${id}`);
   }
 
-  /** Solo se agregan a la URL los filtros que el usuario completó. */
-  buscar(filtro: FiltroVentas, pagina: number, tamanio: number): Observable<PaginaResponse<Venta>> {
+  buscar(
+    filtro: FiltroVentas,
+    pagina: number,
+    tamanio: number,
+    ordenarPor = 'fecha',
+    direccion: 'asc' | 'desc' = 'desc',
+  ): Observable<PaginaResponse<Venta>> {
     let params = new HttpParams()
       .set('pagina', pagina)
       .set('tamanio', tamanio)
-      .set('ordenarPor', 'fecha')
-      .set('direccion', 'desc');
+      .set('ordenarPor', ordenarPor)
+      .set('direccion', direccion);
     if (filtro.clienteId) params = params.set('clienteId', filtro.clienteId);
     if (filtro.estado) params = params.set('estado', filtro.estado);
     if (filtro.desde) params = params.set('desde', filtro.desde);

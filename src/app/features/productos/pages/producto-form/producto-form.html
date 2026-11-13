@@ -4,6 +4,9 @@
     <a routerLink="/productos" class="btn">Volver</a>
   </header>
   @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+  @if (auditoria(); as datos) {
+    <p class="ayuda auditoria-producto">Creado por: {{ datos.creadoPor || 'Sistema' }} · Modificado por: {{ datos.modificadoPor || 'Sin modificaciones' }}</p>
+  }
   <form class="card formulario-producto" [formGroup]="form" (ngSubmit)="guardar()">
     <label>Nombre
       <input class="input" formControlName="nombre" maxlength="120" />
