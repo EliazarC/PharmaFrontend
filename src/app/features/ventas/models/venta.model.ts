@@ -19,6 +19,7 @@ export interface Venta {
   estado: EstadoVenta;
   total: number;
   detalles: DetalleVenta[];
+  creadoPor?: string | null;
 }
 
 /** El request solo incluye identificadores y cantidades. */
