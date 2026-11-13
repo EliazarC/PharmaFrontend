@@ -1,0 +1,19 @@
+.paginador {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.resumen { margin-right: auto; color: #5b6475; }
+.selector-tamanio { display: inline-flex; align-items: center; gap: 6px; }
+.selector-tamanio select {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: #fff;
+  color: inherit;
+}
+@media (max-width: 640px) {
+  .resumen { flex-basis: 100%; }
+}
