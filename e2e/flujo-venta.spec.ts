@@ -22,7 +22,7 @@ test('flujo principal: vendedor registra una venta y el stock baja', async ({ pa
   expect((await registro).status()).toBe(201);
   await expect(page).toHaveURL(/\/ventas\/\d+/);
 
-  await page.goto('/productos?pagina=0&tamanio=20&orden=nombre&dir=asc');
+  await page.getByRole('link', { name: /Productos y stock/i }).click();
   const filaProducto = page.getByTestId('tabla-productos')
     .locator('tr', { hasText: BUSQUEDA_PRODUCTO_E2E }).first();
   await expect(filaProducto.locator('td').nth(3)).toHaveText(String(stockAntes - 2));
