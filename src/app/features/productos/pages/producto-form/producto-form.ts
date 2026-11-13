@@ -23,6 +23,7 @@ export class ProductoForm implements OnInit {
   protected readonly categorias = signal<Categoria[]>([]);
   protected readonly guardando = signal(false);
   protected readonly error = signal<string | null>(null);
+  protected readonly auditoria = signal<{ creadoPor: string | null; modificadoPor: string | null } | null>(null);
   protected readonly form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
     descripcion: [''],
@@ -40,14 +41,17 @@ export class ProductoForm implements OnInit {
     const id = this.id();
     if (id) {
       this.productos.obtener(Number(id)).subscribe({
-        next: p => this.form.setValue({
+        next: p => {
+          this.auditoria.set({ creadoPor: p.creadoPor ?? null, modificadoPor: p.modificadoPor ?? null });
+          this.form.setValue({
           nombre: p.nombre,
           descripcion: p.descripcion ?? '',
           precio: Number(p.precio),
           stock: Number(p.stock),
           categoriaId: Number(p.categoriaId ?? p.categoria?.id ?? 0),
           estado: p.estado,
-        }),
+          });
+        },
         error: (err: HttpErrorResponse) => this.error.set(mensajeError(err)),
       });
     }
