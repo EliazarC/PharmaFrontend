@@ -29,4 +29,14 @@ test('productos se paginan en el servidor y la página permanece en la URL tras 
     headers: { Authorization: `Bearer ${token}` },
   });
   expect(limite.status()).toBe(409);
+
+  // La pantalla de Ventas también consulta páginas al backend y conserva su URL.
+  await page.goto('/ventas?pagina=0&tamanio=20');
+  const ventas = page.getByTestId('tabla-ventas').locator('tbody tr');
+  await expect(ventas).toHaveCount(20);
+  await page.getByRole('button', { name: 'Siguiente' }).click();
+  await expect(page).toHaveURL(/pagina=1/);
+  await expect(page.getByTestId('pagina-actual')).toHaveText(/Página 2 de/);
+  await page.reload();
+  await expect(page.getByTestId('pagina-actual')).toHaveText(/Página 2 de/);
 });
