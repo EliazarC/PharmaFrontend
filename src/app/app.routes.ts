@@ -41,6 +41,13 @@ export const routes: Routes = [
         loadChildren: () => import('./features/ventas/ventas.routes').then(m => m.VENTAS_ROUTES),
       },
       {
+        path: 'auditoria',
+        title: 'Auditoría de operaciones',
+        canActivate: [permisoGuard],
+        data: { permiso: 'USUARIOS_ADMINISTRAR' },
+        loadComponent: () => import('./features/auditoria/pages/auditoria-list/auditoria-list').then(m => m.AuditoriaList),
+      },
+      {
         path: 'reportes',
         canActivate: [permisoGuard],
         data: { permiso: 'REPORTES_VER' },
