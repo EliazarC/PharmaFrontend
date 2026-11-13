@@ -1,0 +1,64 @@
+<section class="page">
+  <header class="page-header">
+    <div><h2>Auditoría de operaciones</h2><p class="ayuda">Consulte quién realizó las operaciones y cuándo se confirmaron.</p></div>
+  </header>
+
+  @if (error()) { <div class="alerta" role="alert">{{ error() }}</div> }
+
+  <form class="card filtros" (submit)="$event.preventDefault(); buscar()">
+    <label>Usuario
+      <input class="input" type="search" [value]="usuario()" (input)="usuario.set($any($event.target).value)" placeholder="admin, vendedor…" />
+    </label>
+    <label>Acción
+      <select class="input" [value]="accion()" (change)="accion.set($any($event.target).value)">
+        <option value="">Todas</option>
+        <option value="VENTA_REGISTRADA">VENTA_REGISTRADA</option>
+        <option value="PRECIO_MODIFICADO">PRECIO_MODIFICADO</option>
+        <option value="PRODUCTO_ELIMINADO">PRODUCTO_ELIMINADO</option>
+        <option value="PRODUCTO_CREADO">PRODUCTO_CREADO</option>
+        <option value="LOGIN_EXITOSO">LOGIN_EXITOSO</option>
+        <option value="LOGIN_FALLIDO">LOGIN_FALLIDO</option>
+        <option value="CATEGORIA_CREADA">CATEGORIA_CREADA</option>
+        <option value="CATEGORIA_MODIFICADA">CATEGORIA_MODIFICADA</option>
+        <option value="CATEGORIA_ELIMINADA">CATEGORIA_ELIMINADA</option>
+        <option value="CLIENTE_CREADO">CLIENTE_CREADO</option>
+        <option value="CLIENTE_MODIFICADO">CLIENTE_MODIFICADO</option>
+        <option value="CLIENTE_ELIMINADO">CLIENTE_ELIMINADO</option>
+      </select>
+    </label>
+    <label>Desde<input class="input" type="date" [value]="desde()" (input)="desde.set($any($event.target).value)" /></label>
+    <label>Hasta<input class="input" type="date" [value]="hasta()" (input)="hasta.set($any($event.target).value)" /></label>
+    <div class="acciones">
+      <button type="button" class="btn" (click)="limpiar()">Limpiar</button>
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+  </form>
+
+  @if (cargando()) {
+    <div class="card">Consultando bitácora…</div>
+  } @else if (resultado(); as r) {
+    <div class="card tabla-contenedor">
+      <table class="tabla" data-testid="tabla-auditoria">
+        <thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Entidad</th><th>ID</th><th>Detalle</th><th>Request ID</th></tr></thead>
+        <tbody>
+          @for (evento of r.contenido; track evento.id) {
+            <tr>
+              <td>{{ evento.fecha | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td>{{ evento.usuario }}</td>
+              <td><span class="badge">{{ evento.accion }}</span></td>
+              <td>{{ evento.entidad }}</td>
+              <td>{{ evento.entidadId ?? '—' }}</td>
+              <td>{{ evento.detalle ?? '—' }}</td>
+              <td class="request-id">{{ evento.requestId ?? '—' }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="7" class="vacio">No hay eventos para los filtros seleccionados.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-paginador [pagina]="r.pagina" [totalPaginas]="r.totalPaginas"
+                   [totalElementos]="r.totalElementos" [tamanio]="r.tamanio"
+                   (cambioPagina)="irA($event)" (cambioTamanio)="cambiarTamanio($event)" />
+  }
+</section>

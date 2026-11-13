@@ -1,0 +1,35 @@
+import { expect, test } from '@playwright/test';
+import { iniciarSesion, API_BASE_URL } from './apoyo';
+
+test('el almacenero no ve Ventas y la URL directa es denegada', async ({ page }) => {
+  await iniciarSesion(page, 'almacen');
+  await expect(page.getByRole('link', { name: /Ventas/i })).toHaveCount(0);
+  await page.goto('/ventas');
+  await expect(page.getByRole('heading', { name: /Acceso denegado/i })).toBeVisible();
+  await page.goto('/auditoria');
+  await expect(page.getByRole('heading', { name: /Acceso denegado/i })).toBeVisible();
+
+  const token = await page.evaluate(() => {
+    const sesion = JSON.parse(sessionStorage.getItem('pharmasoft.sesion') ?? 'null');
+    return sesion?.token as string | undefined;
+  });
+  const auditoria = await page.request.get(API_BASE_URL + '/auditoria', {
+    headers: { Authorization: 'Bearer ' + token },
+  });
+  expect(auditoria.status()).toBe(403);
+});
+
+test('el vendedor ve Productos sin botones de edición', async ({ page }) => {
+  await iniciarSesion(page, 'vendedor', '/productos');
+  await expect(page.getByTestId('tabla-productos')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Nuevo producto/i })).toHaveCount(0);
+  const token = await page.evaluate(() => {
+    const sesion = JSON.parse(sessionStorage.getItem('pharmasoft.sesion') ?? 'null');
+    return sesion?.token as string | undefined;
+  });
+  const crearProducto = await page.request.post(API_BASE_URL + '/productos', {
+    headers: { Authorization: 'Bearer ' + token },
+    data: {},
+  });
+  expect(crearProducto.status()).toBe(403);
+});

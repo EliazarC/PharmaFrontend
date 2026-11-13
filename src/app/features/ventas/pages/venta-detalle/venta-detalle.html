@@ -8,6 +8,7 @@
         <div><dt>Fecha</dt><dd>{{ fechaVenta(v) | date:'dd/MM/yyyy HH:mm' }}</dd></div>
         <div><dt>Cliente</dt><dd>{{ v.clienteNombre }}</dd></div>
         @if (cliente(); as c) { <div><dt>DNI</dt><dd>{{ c.dni }}</dd></div> }
+        <div><dt>Vendedor</dt><dd>{{ v.creadoPor || 'No disponible' }}</dd></div>
         <div><dt>Estado</dt><dd><span class="badge" [class.inactivo]="v.estado === 'ANULADA'">{{ v.estado }}</span></dd></div>
       </dl>
       <div class="tabla-contenedor"><table class="tabla">
