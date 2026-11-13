@@ -6,4 +6,5 @@
 .stock { font-weight: 700; }
 .stock-bajo { color: #b42318; }
 .vacio { text-align: center; color: #64748b; padding: 24px; }
+.orden { border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; padding: 0; }
 @media (max-width: 620px) { .page-header { align-items: flex-start; flex-direction: column; gap: 12px; } }
