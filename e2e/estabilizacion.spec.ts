@@ -152,7 +152,7 @@ test('E2E-12: el administrador ve la venta recién registrada en Auditoría', as
   await page.getByRole('button', { name: 'Cerrar sesión' }).click();
   await iniciarSesion(page, 'admin', '/auditoria');
   await page.getByLabel('Usuario', { exact: true }).fill(USUARIOS.vendedor.usuario);
-  await page.getByRole('combobox').selectOption('VENTA_REGISTRADA');
+  await page.locator('form.filtros').getByRole('combobox').selectOption('VENTA_REGISTRADA');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
 
   const fila = page.getByTestId('tabla-auditoria').getByRole('row').filter({
