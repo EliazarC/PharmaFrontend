@@ -1,4 +1,6 @@
 import { expect, test, type Page, type Response } from '@playwright/test';
+import { normalizarPagina } from '../src/app/core/models/pagina-response';
+import type { Cliente } from '../src/app/features/clientes/models/cliente.model';
 import {
   API_BASE_URL,
   BUSQUEDA_CLIENTE_E2E,
@@ -101,9 +103,11 @@ test('E2E-09: una venta sin productos se bloquea y la API devuelve 400', async (
   await expect(page.getByText(/Agregue al menos un producto/)).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Confirmar venta' })).toHaveCount(0);
 
-  const { contenido } = await (await listado).json();
-  const cliente = contenido.find((fila: { estado: boolean }) => fila.estado);
-  expect(cliente, 'Debe haber un cliente activo en los datos de prueba').toBeDefined();
+  const clientes = await listado;
+  expect(clientes.status()).toBe(200);
+  const { contenido } = normalizarPagina<Cliente>(await clientes.json(), 0, 100);
+  const cliente = contenido.find(fila => fila.estado);
+  if (!cliente) throw new Error('Debe haber un cliente activo en los datos de prueba');
   const respuesta = await page.request.post(`${API_BASE_URL}/ventas`, {
     headers: await cabeceraSesion(page),
     data: { clienteId: cliente.id, detalles: [] },
@@ -148,7 +152,7 @@ test('E2E-12: el administrador ve la venta recién registrada en Auditoría', as
   await page.getByRole('button', { name: 'Cerrar sesión' }).click();
   await iniciarSesion(page, 'admin', '/auditoria');
   await page.getByLabel('Usuario', { exact: true }).fill(USUARIOS.vendedor.usuario);
-  await page.getByLabel('Acción', { exact: true }).selectOption('VENTA_REGISTRADA');
+  await page.getByRole('combobox').selectOption('VENTA_REGISTRADA');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
 
   const fila = page.getByTestId('tabla-auditoria').getByRole('row').filter({

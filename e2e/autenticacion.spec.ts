@@ -11,7 +11,11 @@ test.describe('Autenticación', () => {
     await page.goto('/login');
     await page.getByLabel('Usuario').fill('admin');
     await page.getByLabel('Contraseña', { exact: true }).fill('clave-incorrecta');
+    const intento = page.waitForResponse(respuesta =>
+      new URL(respuesta.url()).pathname === '/api/v1/auth/login' &&
+      respuesta.request().method() === 'POST');
     await page.getByRole('button', { name: 'Ingresar' }).click();
+    expect((await intento).status()).toBe(401);
     await expect(page.getByRole('alert')).toHaveText(/Usuario o contraseña incorrectos/i);
   });
 
